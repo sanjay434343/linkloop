@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Job Link Generator</title>
+<title>Job Link Generator - Customizable</title>
 <style>
   * {
     margin: 0;
@@ -11,12 +11,116 @@
     box-sizing: border-box;
   }
 
+  ::selection {
+    background: #3b82f6;
+    color: white;
+  }
+
+  ::-moz-selection {
+    background: #3b82f6;
+    color: white;
+  }
+
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: white;
     min-height: 100vh;
     padding: 40px 60px;
-    color: black;
+    transition: background-color 0.3s ease;
+  }
+
+  .customizer-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+
+  .customizer-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    z-index: 999;
+  }
+
+  .customizer-panel.active {
+    right: 0;
+  }
+
+  .customizer-panel h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+  }
+
+  .customizer-group {
+    margin-bottom: 25px;
+  }
+
+  .customizer-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .customizer-group input[type="color"],
+  .customizer-group input[type="range"],
+  .customizer-group input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+  }
+
+  .customizer-group input[type="color"] {
+    height: 50px;
+  }
+
+  .customizer-group input[type="range"] {
+    height: 40px;
+  }
+
+  .range-value {
+    display: inline-block;
+    margin-left: 10px;
+    font-weight: 600;
+  }
+
+  .reset-btn {
+    width: 100%;
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .reset-btn:hover {
+    background: #333;
   }
 
   .container {
@@ -29,22 +133,21 @@
     background: transparent;
     padding: 0 0 40px 0;
     text-align: left;
-    color: black;
-    border-bottom: 2px solid black;
     margin-bottom: 40px;
+    transition: all 0.3s ease;
   }
 
   .header h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 8px;
-    color: black;
+    transition: color 0.3s ease;
   }
 
   .header p {
     opacity: 0.6;
     font-size: 1.1rem;
-    color: black;
+    transition: color 0.3s ease;
   }
 
   .form-section {
@@ -60,10 +163,10 @@
     display: block;
     margin-bottom: 12px;
     font-weight: 600;
-    color: black;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: color 0.3s ease;
   }
 
   .input-wrapper {
@@ -73,49 +176,24 @@
   .form-group input {
     width: 100%;
     padding: 16px 18px;
-    border: 2px solid black;
-    border-radius: 0;
     font-size: 1rem;
-    transition: all 0.2s ease;
-    background: transparent;
-    color: black;
+    transition: all 0.3s ease;
   }
 
   .form-group input:focus {
     outline: none;
-    border-color: black;
-    background: transparent;
     box-shadow: none;
-  }
-
-  .form-group input::placeholder {
-    color: rgba(0, 0, 0, 0.3);
   }
 
   .generate-btn {
     width: 100%;
-    background: transparent;
-    color: black;
-    border: 2px solid black;
     padding: 18px 24px;
-    border-radius: 0;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-  }
-
-  .generate-btn:hover {
-    transform: none;
-    box-shadow: none;
-    background: black;
-    color: white;
-  }
-
-  .generate-btn:active {
-    transform: none;
   }
 
   .results-section {
@@ -128,35 +206,30 @@
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 20px;
-    border-bottom: 2px solid black;
+    transition: all 0.3s ease;
   }
 
   .results-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: black;
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: color 0.3s ease;
   }
 
   .stats {
-    background: transparent;
     padding: 8px 16px;
-    border-radius: 0;
     font-size: 0.85rem;
-    color: black;
     font-weight: 600;
-    border: 2px solid black;
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: all 0.3s ease;
   }
 
   .links-container {
-    background: transparent;
-    border-radius: 0;
-    border: 2px solid black;
     max-height: 400px;
     overflow: hidden;
+    transition: all 0.3s ease;
   }
 
   .links-list {
@@ -171,27 +244,15 @@
   }
 
   .links-list::-webkit-scrollbar-track {
-    background: white;
-    border-left: 2px solid black;
+    transition: background 0.3s ease;
   }
 
   .links-list::-webkit-scrollbar-thumb {
-    background: transparent;
-    border: 2px solid black;
-    border-radius: 0;
-  }
-
-  .links-list::-webkit-scrollbar-thumb:hover {
-    background: black;
+    transition: all 0.3s ease;
   }
 
   .link-item {
-    border-bottom: 2px solid black;
-    transition: background-color 0.2s ease;
-  }
-
-  .link-item:hover {
-    background: transparent;
+    transition: all 0.3s ease;
   }
 
   .link-item:last-child {
@@ -201,16 +262,10 @@
   .link-item a {
     display: block;
     padding: 16px 20px;
-    color: black;
     text-decoration: none;
     font-family: 'Monaco', 'Menlo', monospace;
     font-size: 0.9rem;
-    transition: all 0.2s ease;
-  }
-
-  .link-item a:hover {
-    color: black;
-    background: #f0f0f0;
+    transition: all 0.3s ease;
   }
 
   .copy-section {
@@ -222,56 +277,22 @@
   .copy-btn, .select-all-btn {
     flex: 1;
     padding: 16px 20px;
-    border-radius: 0;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
-    border: 2px solid black;
+    transition: all 0.3s ease;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
 
-  .copy-btn {
-    background: transparent;
-    color: black;
-  }
-
-  .copy-btn:hover:not(:disabled) {
-    background: black;
-    color: white;
-    transform: none;
-  }
-
-  .copy-btn:disabled {
-    background: transparent;
+  .copy-btn:disabled, .select-all-btn:disabled {
     cursor: not-allowed;
-    transform: none;
-    opacity: 0.3;
-    border-color: black;
-    color: black;
-  }
-
-  .select-all-btn {
-    background: transparent;
-    color: black;
-    border: 2px solid black;
-  }
-
-  .select-all-btn:hover:not(:disabled) {
-    background: black;
-    color: white;
-    transform: none;
-  }
-
-  .select-all-btn:disabled {
     opacity: 0.3;
   }
 
   .empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: black;
     opacity: 0.4;
   }
 
@@ -280,29 +301,14 @@
     height: 64px;
     margin-bottom: 16px;
     opacity: 1;
-    stroke: black;
   }
 
-  .error-message {
-    background: transparent;
-    border: 2px solid black;
-    color: black;
+  .error-message, .success-message {
     padding: 16px 20px;
-    border-radius: 0;
     margin-top: 20px;
     font-size: 0.9rem;
     font-weight: 600;
-  }
-
-  .success-message {
-    background: transparent;
-    border: 2px solid black;
-    color: black;
-    padding: 16px 20px;
-    border-radius: 0;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    transition: all 0.3s ease;
   }
 
   @keyframes fadeIn {
@@ -314,18 +320,14 @@
     animation: fadeIn 0.3s ease forwards;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     body {
       padding: 20px;
     }
 
-    .container {
-      margin: 0;
-    }
-
-    .header {
-      padding: 0 0 30px 0;
-      margin-bottom: 30px;
+    .customizer-panel {
+      width: 100%;
+      right: -100%;
     }
 
     .header h1 {
@@ -339,6 +341,84 @@
 </style>
 </head>
 <body>
+  <button class="customizer-toggle" onclick="toggleCustomizer()">⚙️ Customize</button>
+
+  <div class="customizer-panel" id="customizerPanel">
+    <h3>Customization Options</h3>
+
+    <div class="customizer-group">
+      <label>Background Color</label>
+      <input type="color" id="bgColor" value="#ffffff" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Text Color (Headers)</label>
+      <input type="color" id="headerTextColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Label Text Color</label>
+      <input type="color" id="labelTextColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Input Text Color</label>
+      <input type="color" id="inputTextColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Input Border Color</label>
+      <input type="color" id="inputBorderColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Button Text Color</label>
+      <input type="color" id="buttonTextColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Button Border Color</label>
+      <input type="color" id="buttonBorderColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Button Background (Hover)</label>
+      <input type="color" id="buttonHoverBg" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Link Text Color</label>
+      <input type="color" id="linkTextColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Link Border Color</label>
+      <input type="color" id="linkBorderColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Container Border Color</label>
+      <input type="color" id="containerBorderColor" value="#000000" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Selection Background Color</label>
+      <input type="color" id="selectionBgColor" value="#3b82f6" onchange="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Border Radius <span class="range-value" id="radiusValue">0px</span></label>
+      <input type="range" id="borderRadius" min="0" max="50" value="0" oninput="updateStyles()">
+    </div>
+
+    <div class="customizer-group">
+      <label>Border Width <span class="range-value" id="borderWidthValue">2px</span></label>
+      <input type="range" id="borderWidth" min="1" max="10" value="2" oninput="updateStyles()">
+    </div>
+
+    <button class="reset-btn" onclick="resetStyles()">Reset to Default</button>
+  </div>
+
   <div class="container">
     <div class="header">
       <h1>Job Link Generator</h1>
@@ -401,6 +481,210 @@
   <script>
     let allLinks = [];
 
+    // Default style values
+    const defaultStyles = {
+      bgColor: '#ffffff',
+      headerTextColor: '#000000',
+      labelTextColor: '#000000',
+      inputTextColor: '#000000',
+      inputBorderColor: '#000000',
+      buttonTextColor: '#000000',
+      buttonBorderColor: '#000000',
+      buttonHoverBg: '#000000',
+      linkTextColor: '#000000',
+      linkBorderColor: '#000000',
+      containerBorderColor: '#000000',
+      selectionBgColor: '#3b82f6',
+      borderRadius: '0',
+      borderWidth: '2'
+    };
+
+    // Load saved styles on page load
+    function loadStyles() {
+      const savedStyles = JSON.parse(localStorage.getItem('jobLinkGeneratorStyles')) || defaultStyles;
+      
+      Object.keys(savedStyles).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.value = savedStyles[key];
+        }
+      });
+      
+      updateStyles();
+    }
+
+    // Save styles to localStorage
+    function saveStyles() {
+      const styles = {
+        bgColor: document.getElementById('bgColor').value,
+        headerTextColor: document.getElementById('headerTextColor').value,
+        labelTextColor: document.getElementById('labelTextColor').value,
+        inputTextColor: document.getElementById('inputTextColor').value,
+        inputBorderColor: document.getElementById('inputBorderColor').value,
+        buttonTextColor: document.getElementById('buttonTextColor').value,
+        buttonBorderColor: document.getElementById('buttonBorderColor').value,
+        buttonHoverBg: document.getElementById('buttonHoverBg').value,
+        linkTextColor: document.getElementById('linkTextColor').value,
+        linkBorderColor: document.getElementById('linkBorderColor').value,
+        containerBorderColor: document.getElementById('containerBorderColor').value,
+        selectionBgColor: document.getElementById('selectionBgColor').value,
+        borderRadius: document.getElementById('borderRadius').value,
+        borderWidth: document.getElementById('borderWidth').value
+      };
+      
+      localStorage.setItem('jobLinkGeneratorStyles', JSON.stringify(styles));
+    }
+
+    // Update all styles
+    function updateStyles() {
+      const bgColor = document.getElementById('bgColor').value;
+      const headerTextColor = document.getElementById('headerTextColor').value;
+      const labelTextColor = document.getElementById('labelTextColor').value;
+      const inputTextColor = document.getElementById('inputTextColor').value;
+      const inputBorderColor = document.getElementById('inputBorderColor').value;
+      const buttonTextColor = document.getElementById('buttonTextColor').value;
+      const buttonBorderColor = document.getElementById('buttonBorderColor').value;
+      const buttonHoverBg = document.getElementById('buttonHoverBg').value;
+      const linkTextColor = document.getElementById('linkTextColor').value;
+      const linkBorderColor = document.getElementById('linkBorderColor').value;
+      const containerBorderColor = document.getElementById('containerBorderColor').value;
+      const selectionBgColor = document.getElementById('selectionBgColor').value;
+      const borderRadius = document.getElementById('borderRadius').value;
+      const borderWidth = document.getElementById('borderWidth').value;
+
+      // Update range value displays
+      document.getElementById('radiusValue').textContent = borderRadius + 'px';
+      document.getElementById('borderWidthValue').textContent = borderWidth + 'px';
+
+      // Apply background
+      document.body.style.backgroundColor = bgColor;
+
+      // Apply header styles
+      document.querySelector('.header h1').style.color = headerTextColor;
+      document.querySelector('.header p').style.color = headerTextColor;
+      document.querySelector('.header').style.borderColor = containerBorderColor;
+      document.querySelector('.header').style.borderWidth = borderWidth + 'px';
+
+      // Apply results title
+      document.querySelector('.results-title').style.color = headerTextColor;
+      document.querySelector('.results-header').style.borderColor = containerBorderColor;
+      document.querySelector('.results-header').style.borderWidth = borderWidth + 'px';
+
+      // Apply label styles
+      document.querySelectorAll('.form-group label').forEach(label => {
+        label.style.color = labelTextColor;
+      });
+
+      // Apply input styles
+      document.querySelectorAll('.form-group input').forEach(input => {
+        input.style.color = inputTextColor;
+        input.style.borderColor = inputBorderColor;
+        input.style.borderWidth = borderWidth + 'px';
+        input.style.borderRadius = borderRadius + 'px';
+        input.style.backgroundColor = 'transparent';
+      });
+
+      // Apply button styles
+      const buttons = ['.generate-btn', '.copy-btn', '.select-all-btn', '.customizer-toggle'];
+      buttons.forEach(selector => {
+        document.querySelectorAll(selector).forEach(btn => {
+          btn.style.color = buttonTextColor;
+          btn.style.borderColor = buttonBorderColor;
+          btn.style.borderWidth = borderWidth + 'px';
+          btn.style.borderRadius = borderRadius + 'px';
+          btn.style.backgroundColor = 'transparent';
+          btn.style.borderStyle = 'solid';
+        });
+      });
+
+      // Apply stats badge styles
+      document.querySelector('.stats').style.color = labelTextColor;
+      document.querySelector('.stats').style.borderColor = buttonBorderColor;
+      document.querySelector('.stats').style.borderWidth = borderWidth + 'px';
+      document.querySelector('.stats').style.borderRadius = borderRadius + 'px';
+      document.querySelector('.stats').style.backgroundColor = 'transparent';
+
+      // Apply links container styles
+      document.querySelector('.links-container').style.borderColor = containerBorderColor;
+      document.querySelector('.links-container').style.borderWidth = borderWidth + 'px';
+      document.querySelector('.links-container').style.borderRadius = borderRadius + 'px';
+      document.querySelector('.links-container').style.backgroundColor = 'transparent';
+
+      // Apply link item styles
+      document.querySelectorAll('.link-item').forEach(item => {
+        item.style.borderColor = linkBorderColor;
+        item.style.borderWidth = borderWidth + 'px';
+      });
+
+      document.querySelectorAll('.link-item a').forEach(link => {
+        link.style.color = linkTextColor;
+      });
+
+      // Apply empty state color
+      document.querySelectorAll('.empty-state').forEach(state => {
+        state.style.color = headerTextColor;
+      });
+
+      document.querySelectorAll('.empty-state svg').forEach(svg => {
+        svg.style.stroke = headerTextColor;
+      });
+
+      // Apply error/success message styles
+      document.querySelectorAll('.error-message, .success-message').forEach(msg => {
+        msg.style.borderColor = containerBorderColor;
+        msg.style.borderWidth = borderWidth + 'px';
+        msg.style.borderRadius = borderRadius + 'px';
+        msg.style.color = headerTextColor;
+      });
+
+      // Create dynamic style for hover and selection
+      let styleTag = document.getElementById('dynamicStyles');
+      if (!styleTag) {
+        styleTag = document.createElement('style');
+        styleTag.id = 'dynamicStyles';
+        document.head.appendChild(styleTag);
+      }
+
+      styleTag.textContent = `
+        ::selection {
+          background: ${selectionBgColor} !important;
+          color: white !important;
+        }
+        ::-moz-selection {
+          background: ${selectionBgColor} !important;
+          color: white !important;
+        }
+        .generate-btn:hover,
+        .copy-btn:hover:not(:disabled),
+        .select-all-btn:hover:not(:disabled),
+        .customizer-toggle:hover {
+          background-color: ${buttonHoverBg} !important;
+          color: ${bgColor} !important;
+        }
+        .link-item a:hover {
+          background-color: ${selectionBgColor}33 !important;
+        }
+      `;
+
+      saveStyles();
+    }
+
+    // Reset styles to default
+    function resetStyles() {
+      Object.keys(defaultStyles).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.value = defaultStyles[key];
+        }
+      });
+      updateStyles();
+    }
+
+    // Toggle customizer panel
+    function toggleCustomizer() {
+      document.getElementById('customizerPanel').classList.toggle('active');
+    }
+
     function extractJobId(url) {
       const match = url.match(/\/jobs\/(\d+)/);
       return match ? parseInt(match[1], 10) : null;
@@ -437,7 +721,6 @@
       const copyBtn = document.getElementById('copyBtn');
       const selectAllBtn = document.getElementById('selectAllBtn');
 
-      // Clear previous results
       list.innerHTML = '';
       allLinks = [];
       copyBtn.disabled = true;
@@ -455,6 +738,7 @@
             <p>Please fill in both URLs to generate links</p>
           </div>
         `;
+        updateStyles();
         return;
       }
 
@@ -473,6 +757,7 @@
             <p>Invalid URL format. URLs must contain "/jobs/{number}"</p>
           </div>
         `;
+        updateStyles();
         return;
       }
 
@@ -498,6 +783,7 @@
           list.appendChild(li);
 
           updateStats(allLinks.length);
+          updateStyles();
         }, delay);
 
         delay += 50;
@@ -567,7 +853,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      const inputs = document.querySelectorAll('input');
+      loadStyles();
+      
+      const inputs = document.querySelectorAll('input[type="text"]');
       inputs.forEach(input => {
         input.addEventListener('keypress', function(e) {
           if (e.key === 'Enter') {
